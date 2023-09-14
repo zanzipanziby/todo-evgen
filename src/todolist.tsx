@@ -1,5 +1,6 @@
-import {TaskType} from "./App";
-import {ChangeEvent, useState} from "react";
+import {FilterValuesType, TaskType} from "./App";
+import {AddItemField} from "./add-item-field";
+import {EditableText} from "./editable-text";
 
 
 type TodolistPropsType = {
@@ -8,7 +9,10 @@ type TodolistPropsType = {
 	tasks: TaskType[]
 	removeTask: (todolistId: string, taskId: string) => void
 	changeTaskStatus: (todolistId: string, taskId: string, status: boolean) => void
+	updateTaskTitle: (todolistId: string, taskId: string, newTitle: string) => void
 	addTask: (todolistId: string, title: string) => void
+	changeFilterForTodolist: (todolistId: string, value: FilterValuesType) => void
+	updateTodolistTitle: (todolistId: string, newTitle: string) => void
 }
 
 export const Todolist = (props: TodolistPropsType) => {
@@ -22,33 +26,21 @@ export const Todolist = (props: TodolistPropsType) => {
 		props.changeTaskStatus(props.todolistId, taskId, status)
 	}
 
-	const [inputValue, setInputValue] = useState('')
-	const [error, setError] = useState(null as null | string)
-	const onChangeInputHandle = (e: ChangeEvent<HTMLInputElement>) => {
-		setError(null)
-		setInputValue(e.currentTarget.value)
+	const changeFilterForTodolistHandle = (value: FilterValuesType) => {
+		return () => props.changeFilterForTodolist(props.todolistId, value)
 	}
-	const addTaskHandle = () => {
-		if (inputValue.trim()) {
-			props.addTask(props.todolistId, inputValue)
-			setInputValue('')
-		} else {
-			setError('Enter value')
-		}
-
+	const addTaskHandle = (newTitle: string) => {
+		props.addTask(props.todolistId, newTitle)
 	}
 
-
+	const updateTodolistTitleHandle = (text: string) => {
+		props.updateTodolistTitle(props.todolistId, text)
+	}
 	return (
-		<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-			<h2>{props.title}</h2>
+		<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 50px'}}>
+			<h2><EditableText text={props.title} callback={updateTodolistTitleHandle}/></h2>
 			<div style={{display: 'flex', gap: '10px'}}>
-				<input onChange={onChangeInputHandle} value={inputValue}
-					   style={error ? {border: '1px solid red', outline:'red'} : {}}
-					   placeholder={error ? error : ''}
-
-				/>
-				<button onClick={addTaskHandle}>+</button>
+				<AddItemField callback={addTaskHandle}/>
 			</div>
 			<ul>
 				{props.tasks.map(t => {
@@ -57,16 +49,18 @@ export const Todolist = (props: TodolistPropsType) => {
 							<input type={'checkbox'} checked={t.isDone}
 								   onChange={e => changeTaskStatusHandle(t.taskId, e.currentTarget.checked)}/>
 							<button style={{marginRight: "20px"}} onClick={() => removeTaskHandle(t.taskId)}>x</button>
-							<span>{t.title}</span>
+
+							<EditableText text={t.title}
+										  callback={text => props.updateTaskTitle(props.todolistId, t.taskId, text)}/>
 						</li>
 					)
 				})}
 
 			</ul>
 			<div>
-				<button>All</button>
-				<button>Active</button>
-				<button>Completed</button>
+				<button onClick={changeFilterForTodolistHandle('all')}>All</button>
+				<button onClick={changeFilterForTodolistHandle('active')}>Active</button>
+				<button onClick={changeFilterForTodolistHandle('completed')}>Completed</button>
 			</div>
 
 		</div>
