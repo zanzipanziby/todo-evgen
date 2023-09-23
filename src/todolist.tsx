@@ -1,6 +1,7 @@
-import {FilterValuesType, TaskType} from "./App";
 import {AddItemField} from "./add-item-field";
 import {EditableText} from "./editable-text";
+import {FilterValuesType} from "./redux/reducers/todolist-reducer";
+import {TaskType} from "./redux/reducers/tasks-reducer";
 
 
 type TodolistPropsType = {
