@@ -14,6 +14,7 @@ type TodolistPropsType = {
 	addTask: (todolistId: string, title: string) => void
 	changeFilterForTodolist: (todolistId: string, value: FilterValuesType) => void
 	updateTodolistTitle: (todolistId: string, newTitle: string) => void
+	removeTodolist: (todolistId: string) => void
 }
 
 export const Todolist = (props: TodolistPropsType) => {
@@ -37,9 +38,16 @@ export const Todolist = (props: TodolistPropsType) => {
 	const updateTodolistTitleHandle = (text: string) => {
 		props.updateTodolistTitle(props.todolistId, text)
 	}
+	const removeTodolistHandle = () => {
+		props.removeTodolist(props.todolistId)
+	}
+
 	return (
 		<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 50px'}}>
-			<h2><EditableText text={props.title} callback={updateTodolistTitleHandle}/></h2>
+			<div style={{display: "flex", gap: '20px'}}>
+				<h2><EditableText text={props.title} callback={updateTodolistTitleHandle}/></h2>
+				<button onClick={removeTodolistHandle}>X</button>
+			</div>
 			<div style={{display: 'flex', gap: '10px'}}>
 				<AddItemField callback={addTaskHandle}/>
 			</div>

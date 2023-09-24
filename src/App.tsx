@@ -2,8 +2,13 @@ import React from 'react';
 import './App.css';
 import {Todolist} from "./todolist";
 import {AddItemField} from "./add-item-field";
-import {FilterValuesType} from "./redux/reducers/todolist-reducer";
-import {removeTaskAC, TaskType} from "./redux/reducers/tasks-reducer";
+import {
+	addTodolistAC,
+	changeFilterForTodolistAC,
+	FilterValuesType, removeTodolistAC,
+	updateTodolistTitleAC
+} from "./redux/reducers/todolist-reducer";
+import {addTaskAC, changeTaskStatusAC, removeTaskAC, TaskType, updateTaskTitleAC} from "./redux/reducers/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./redux/store";
 
@@ -18,35 +23,38 @@ function App() {
 
 
 	const updateTaskTitle = (todolistId: string, taskId: string, newTitle: string) => {
-
+		dispatch(updateTaskTitleAC(todolistId, taskId, newTitle))
 	}
 
 	const addTodolist = (title: string) => {
-
+		dispatch(addTodolistAC(title))
 
 	}
 	const updateTodolistTitle = (todolistId: string, newTitle: string) => {
-
-
+		dispatch(updateTodolistTitleAC(todolistId, newTitle))
 	}
 
 	const removeTask = (todolistId: string, taskId: string) => {
-		dispatch(removeTaskAC(todolistId,taskId ))
+		dispatch(removeTaskAC(todolistId, taskId))
 	}
 
 	const changeFilterForTodolist = (todolistId: string, value: FilterValuesType) => {
-
-
+		dispatch(changeFilterForTodolistAC(todolistId, value))
 	}
 
 	const changeTaskStatus = (todolistId: string, taskId: string, status: boolean) => {
-
-
+		dispatch(changeTaskStatusAC(todolistId, taskId, status))
 	}
+
 	const addTask = (todolistId: string, title: string) => {
-
-
+		dispatch(addTaskAC(todolistId, title))
 	}
+
+	const removeTodolist = (todolistId: string) => {
+		dispatch(removeTodolistAC(todolistId))
+		console.log(tasksWithStore)
+	}
+
 
 
 	const filteredTask = (tasks: TaskType[], filter: FilterValuesType) => {
@@ -80,6 +88,7 @@ function App() {
 								changeFilterForTodolist={changeFilterForTodolist}
 								changeTaskStatus={changeTaskStatus}
 								updateTaskTitle={updateTaskTitle}
+								removeTodolist={removeTodolist}
 								key={tl.todolistId}
 								todolistId={tl.todolistId}
 								title={tl.title}
