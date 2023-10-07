@@ -69,7 +69,6 @@ function App() {
 
 
 	return (
-
 		<>
 
 			<div style={{display: 'flex', gap: '10px', margin: '100px 0 0 100px'}}>
